@@ -10,11 +10,14 @@ class Server
 		@server = TCPServer.open(ip, port)
 	end
 #Listen for multiple clients and close connection after welcoming each one
-	def run 	
+	def run 
+	loop {
+		print "Awaiting new client..."	
 		Thread.start(@server.accept) do |client|
 			client.puts "Welcome to the Terminal-Chat-App"
 			client.close
-		end	
+		end
+	}	
 	end
 end
 
