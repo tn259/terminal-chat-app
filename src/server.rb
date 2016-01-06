@@ -1,7 +1,22 @@
+# server.rb
+#
+#Server has a TCPServer which accepts TCPSockets
+# 
+#
 require 'socket'
 
 class Server
-	def initialize(port, ip)
-		
+	def initialize(ip, port)
+		@server = TCPServer.open(ip, port)
+	end
+#Listen for multiple clients and close connection after welcoming each one
+	def run 	
+		Thread.start(@server.accept) do |client|
+			client.puts "Welcome to the Terminal-Chat-App"
+			client.close
+		end	
 	end
 end
+
+server = Server.new "127.0.0.1", 3000
+server.run
