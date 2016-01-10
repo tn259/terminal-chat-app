@@ -1,4 +1,4 @@
-#ifdef CLIENT_H	
+#ifndef CLIENT_H	
 #define CLIENT_H
 
 /*
@@ -13,6 +13,7 @@ TODO Understand how to setup up boost socket so that connection to ruby server c
 //Socket and network programming libraries
 #include <boost/asio.hpp>
 #include <boost/asio/ip/tcp.hpp>
+#include <boost/array.hpp>
 
 //namespace aliasing to enhance readability
 //Note: must be sure that namespaces do not clash 
@@ -24,13 +25,13 @@ using namespace boost::asio::ip;
 //Use boost smartpointers
 typedef boost::shared_ptr<tcp::socket> socket_ptr; //perhaps use later
 typedef boost::shared_ptr<std::string> string_ptr;
-//All clients have access to the same message queue
+//All clients have access to the same message queue later for multiple clients
 typedef boost::shared_ptr< std::queue<string_ptr> > messageQueue_ptr;
 
 class Client {
 private:
-	static const std::string IP = "127.0.0.1";
-	static const int PORT = 3000;
+	static const std::string IP;
+	static const std::string PORT;
 	messageQueue_ptr messages;	
 	void run();
 public:
