@@ -33,9 +33,9 @@ private:
 	static const std::string IP;
 	static const std::string PORT;
 	messageQueue_ptr messages;	
-	void run();
 public:
 	Client();
+	void run();
 };
 
 #endif

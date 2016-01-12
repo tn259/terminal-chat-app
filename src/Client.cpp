@@ -3,7 +3,7 @@
 const std::string Client::IP = "127.0.0.1";
 const std::string Client::PORT = "3000";
 
-Client::Client() { run(); }
+Client::Client() {}
 
 void Client::run() {
 	try{	//query for endpoints matching a server on specific port and ip
@@ -37,5 +37,6 @@ void Client::run() {
 
 int main() {
 	Client c{};
+	c.run();
 	return 0;
 }
