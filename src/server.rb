@@ -6,8 +6,13 @@
 require 'socket'
 
 class Server
+	#allow reading of ip and port as an exercise in testing for now
+	attr_reader :ip
+	attr_reader :port
 	def initialize(ip, port)
-		@server = TCPServer.open(ip, port)
+		@ip = ip
+		@port = port
+		@server = TCPServer.new(ip, port)
 	end
 #Listen for multiple clients and close connection after welcoming each one
 	def run 
@@ -18,9 +23,9 @@ class Server
 			client.puts "I'm afraid I'll have to say by for now"
 			client.close
 		end
-	}	
+	}
 	end
 end
 
-server = Server.new "127.0.0.1", 3000
-server.run
+#server = Server.new "127.0.0.1", 3000 
+#server.run
