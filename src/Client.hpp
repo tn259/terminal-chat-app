@@ -3,7 +3,6 @@
 
 /*
 To begin with client contains a socket which just connects to server.
-TODO Understand how to setup up boost socket so that connection to ruby server can be made.
 */
 
 #include <iostream>
@@ -14,14 +13,6 @@ TODO Understand how to setup up boost socket so that connection to ruby server c
 #include <boost/asio.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/array.hpp>
-
-//namespace aliasing to enhance readability
-//Note: must be sure that namespaces do not clash 
-using namespace boost;
-using namespace boost::asio;
-using namespace boost::asio::ip;
-
-//typedef aliases to enhance readability
 //Use boost smartpointers
 typedef boost::shared_ptr<tcp::socket> socket_ptr; //perhaps use later
 typedef boost::shared_ptr<std::string> string_ptr;

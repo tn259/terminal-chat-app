@@ -1,5 +1,12 @@
 #include "Client.hpp"
 
+//namespace aliasing to enhance readability
+////Note: must be sure that namespaces do not clash 
+using namespace boost;
+using namespace boost::asio;
+using namespace boost::asio::ip;
+//
+
 const std::string Client::IP = "127.0.0.1";
 const std::string Client::PORT = "3000";
 

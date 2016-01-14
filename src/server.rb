@@ -27,5 +27,5 @@ class Server
 	end
 end
 
-#server = Server.new "127.0.0.1", 3000 
-#server.run
+server = Server.new "127.0.0.1", 3000 
+server.run
