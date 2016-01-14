@@ -1,4 +1,4 @@
-ADD_DEFINITIONS(-std=c++11)
+add_definitions(-std=c++11)
 find_package(Boost 1.54.0 COMPONENTS system filesystem REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 file( GLOB SRCS *.cpp *.hpp )
