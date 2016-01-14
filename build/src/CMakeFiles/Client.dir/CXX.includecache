@@ -7,20 +7,22 @@
 #IncludeRegexTransform: 
 
 /home/tnewman/dev/TerminalChatApp/src/Client.cpp
-Client.hpp
-/home/tnewman/dev/TerminalChatApp/src/Client.hpp
-
-/home/tnewman/dev/TerminalChatApp/src/Client.hpp
-iostream
--
-string
--
-queue
--
 boost/asio.hpp
 -
 boost/asio/ip/tcp.hpp
 -
 boost/array.hpp
+-
+iostream
+-
+Client.hpp
+/home/tnewman/dev/TerminalChatApp/src/Client.hpp
+
+/home/tnewman/dev/TerminalChatApp/src/Client.hpp
+string
+-
+queue
+-
+boost/shared_ptr.hpp
 -
 

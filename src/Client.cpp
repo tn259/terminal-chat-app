@@ -1,3 +1,7 @@
+#include <boost/asio.hpp>
+#include <boost/asio/ip/tcp.hpp>
+#include <boost/array.hpp>
+#include <iostream>
 #include "Client.hpp"
 
 //namespace aliasing to enhance readability

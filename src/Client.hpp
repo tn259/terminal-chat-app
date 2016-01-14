@@ -5,16 +5,12 @@
 To begin with client contains a socket which just connects to server.
 */
 
-#include <iostream>
 #include <string> 
 #include <queue>
+#include <boost/shared_ptr.hpp>
 
-//Socket and network programming libraries
-#include <boost/asio.hpp>
-#include <boost/asio/ip/tcp.hpp>
-#include <boost/array.hpp>
 //Use boost smartpointers
-typedef boost::shared_ptr<tcp::socket> socket_ptr; //perhaps use later
+//typedef boost::shared_ptr<tcp::socket> socket_ptr; //perhaps use later
 typedef boost::shared_ptr<std::string> string_ptr;
 //All clients have access to the same message queue later for multiple clients
 typedef boost::shared_ptr< std::queue<string_ptr> > messageQueue_ptr;
