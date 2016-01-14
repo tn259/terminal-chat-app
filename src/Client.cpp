@@ -10,9 +10,10 @@ using namespace boost;
 using namespace boost::asio;
 using namespace boost::asio::ip;
 //
-
-const std::string Client::IP = "127.0.0.1";
-const std::string Client::PORT = "3000";
+namespace {
+	const std::string IP = "127.0.0.1";
+	const std::string PORT = "3000";
+}
 
 Client::Client() {}
 

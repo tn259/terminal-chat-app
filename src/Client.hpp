@@ -17,8 +17,6 @@ typedef boost::shared_ptr< std::queue<string_ptr> > messageQueue_ptr;
 
 class Client {
 private:
-	static const std::string IP;
-	static const std::string PORT;
 	messageQueue_ptr messages;	
 public:
 	Client();
