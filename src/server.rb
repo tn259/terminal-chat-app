@@ -27,5 +27,7 @@ class Server
 	end
 end
 
-server = Server.new "127.0.0.1", 3000 
-server.run
+if __FILE__ == $0
+	server = Server.new "127.0.0.1", 3000 
+	server.run
+end
