@@ -23,7 +23,7 @@ class Server
 		print "Awaiting new client..."	
 		Thread.start(@server.accept) do |client|
 			client.puts "Welcome to the Terminal-Chat-App"
-			client.puts "I'm afraid I'll have to say by for now"
+			#client.puts "I'm afraid I'll have to say by for now"
 			client.close
 		end
 	}
