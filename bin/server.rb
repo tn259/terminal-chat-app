@@ -9,10 +9,13 @@ class Server
 	#allow reading of ip and port as an exercise in testing for now
 	attr_reader :ip
 	attr_reader :port
+	attr_reader :server
 	def initialize(ip, port)
 		@ip = ip
 		@port = port
-		@server = TCPServer.new(ip, port)
+		@ip.freeze
+		@port.freeze
+		@server = TCPServer.new(@ip, @port)
 	end
 #Listen for multiple clients and close connection after welcoming each one
 	def run 

@@ -1,32 +1,44 @@
-require_relative '../src/server'
+require_relative '../bin/server'
 require 'spec_helper'
 
 describe Server do
 
 	s = Server.new "127.0.0.1", 3000
 
-	it "has port == 3000" do
-		expect(s.port).to eq(3000)
-	end
-
-	it "has ip == 127.0.0.1" do
-		s.ip.should == "127.0.0.1"
+	describe "correct initial values" do
+		it "has port == 3000" do
+			expect(s.port).to eq(3000)
+		end
+		it "has ip == 127.0.0.1" do
+			expect(s.ip).to eq("127.0.0.1")
+		end
+		it "has a TCPServer" do 
+			expect(s.server).to be_a TCPServer
+		end
 	end
 	
-#The following made me understand that attr_readable means that the instance variables can be modified internally but you cannot point them to different objects
-#Must remember that everything in ruby is treated as an object
-
-	it "has immutable port" do
-		s.port << 2000
-		s.port.should == 3000
+	describe "instance variables not reassigned" do
+		it "@port cannot be reassigned" do
+			expect{s.port = 2000}.to raise_error NoMethodError	
+		end
+		it "@ip cannot be reassigned" do 
+			expect{s.ip = ""}.to raise_error NoMethodError
+		end
+		it "@TCPServer cannot be reassigned" do
+			expect{s.server = TCPServer.new 2000}.to raise_error NoMethodError	
+		end
 	end
 
-#fails because the querty string can be modified internally
-#TODO make copies of instance variables with .dup
-	it "has immutable ip" do
-		s.ip << "qwerty"
-		expect(s.ip).to eq("127.0.0.1")
+	describe "instance variable internals immutable" do
+		it "has immutable port" do
+			expect(s.port.frozen?).to eq(true)
+		end
+		it "has immutable ip" do
+			expect(s.ip.frozen?).to eq(true)
+		end
 	end
-
-
+	
+	describe "#run" do
+		
+	end	
 end
