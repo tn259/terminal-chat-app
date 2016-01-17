@@ -10,12 +10,16 @@ class Server
 	attr_reader :ip
 	attr_reader :port
 	attr_reader :server
+	attr_reader :messageQueue
+	attr_reader :clients
 	def initialize(ip, port)
 		@ip = ip
 		@port = port
 		@ip.freeze
 		@port.freeze
 		@server = TCPServer.new(@ip, @port)
+		@clients = Hash.new
+		@messageQueue = Queue.new
 	end
 #Listen for multiple clients and close connection after welcoming each one
 	def run 
@@ -32,6 +36,12 @@ class Server
 		end
 	}
 	end
+	
+	def get_message(client)
+		message = client.gets
+		@messageQueue.push message
+	end
+
 end
 
 if __FILE__ == $0
