@@ -19,7 +19,7 @@ class Server
 		@port.freeze
 		@server = TCPServer.new(@ip, @port)
 		@clients = Hash.new
-		@messageQueue = Queue.new
+		@message_queue = Queue.new
 	end
 #Listen for multiple clients and close connection after welcoming each one
 	def run 
@@ -39,7 +39,14 @@ class Server
 	
 	def get_message(client)
 		message = client.gets
-		@messageQueue.push message
+		@message_queue.push message
+	end
+
+	def broadcast_message
+		message = @message_queue.pop
+		@clients.each do |client|
+			client.puts message
+		end
 	end
 
 end
