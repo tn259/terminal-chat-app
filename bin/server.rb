@@ -10,7 +10,7 @@ class Server
 	attr_reader :ip
 	attr_reader :port
 	attr_reader :server
-	attr_reader :messageQueue
+	attr_reader :message_queue
 	attr_reader :clients
 	def initialize(ip, port)
 		@ip = ip
@@ -36,6 +36,16 @@ class Server
 		end
 	}
 	end
+	
+#Perhaps just listen_and_broadcast so no need for queue
+	#def listen_and_broadcast(client)
+	#	loop {	
+	#		message = client.gets
+	#		@clients.each do |c|
+	#			c.puts message
+	#		end
+	#	}		
+	#end
 	
 	def get_message(client)
 		message = client.gets

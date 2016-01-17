@@ -51,6 +51,8 @@ void Client::run() {
 
 /* FOR USE AFTER INITIAL TESTS WRITTEN
 
+May be better to just have listen() and send() which run Two infinite looping threads
+
 void Client::readUserInput() {
 	//user enters text until enter pressed	
 	string_ptr message{new std::string{}};
