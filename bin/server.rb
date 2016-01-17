@@ -22,9 +22,13 @@ class Server
 	loop {
 		print "Awaiting new client..."	
 		Thread.start(@server.accept) do |client|
-			client.puts "Welcome to the Terminal-Chat-App"
-			#client.puts "I'm afraid I'll have to say by for now"
-			client.close
+			begin
+				client.puts "Welcome to the Terminal-Chat-App"
+				#client.puts "I'm afraid I'll have to say by for now"
+				client.close
+			rescue	SocketError =>  e
+				puts e.message
+			end	
 		end
 	}
 	end

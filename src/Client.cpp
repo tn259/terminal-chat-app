@@ -2,6 +2,7 @@
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/array.hpp>
 #include <iostream>
+#include <utility>
 #include "Client.hpp"
 
 //namespace aliasing to enhance readability
@@ -46,6 +47,19 @@ void Client::run() {
 		std::cerr << e.what() << std::endl;
 	}	
 }
+
+void Client::readUserInput() {
+	//user enters text until enter pressed	
+	string_ptr message{new std::string{}};
+	getline(std::cin, *message);
+	//put message into queue
+	(*messages).push(message);	
+}				
+
+void Client::send() {}
+
+
+
 
 int main() {
 	Client c{};
