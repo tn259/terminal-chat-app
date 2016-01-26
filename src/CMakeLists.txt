@@ -1,6 +1,8 @@
 add_definitions(-std=c++11)
 find_package(Boost 1.54.0 COMPONENTS system filesystem REQUIRED)
+find_package(GTest REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
+include_directories(${GTEST_INCLUDE_DIRS})
 file( GLOB SRCS *.cpp *.hpp )
 add_executable(Client ${SRCS})
 target_link_libraries(Client ${Boost_LIBRARIES})
