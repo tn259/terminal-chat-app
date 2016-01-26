@@ -3,7 +3,7 @@
 #Server has a TCPServer which accepts TCPSockets
 # 
 #
-require 'socket'
+require_relative '../lib/chat-client-handler'
 
 class Server
 	#allow reading of ip and port as an exercise in testing for now
@@ -19,20 +19,14 @@ class Server
 		@port.freeze
 		@server = TCPServer.new(@ip, @port)
 		@clients = Hash.new
-		@message_queue = Queue.new
+	#	@message_queue = Queue.new
 	end
 #Listen for multiple clients and close connection after welcoming each one
 	def run 
 	loop {
 		print "Awaiting new client..."	
 		Thread.start(@server.accept) do |client|
-			begin
-				client.puts "Welcome to the Terminal-Chat-App"
-				#client.puts "I'm afraid I'll have to say by for now"
-				client.close
-			rescue	SocketError =>  e
-				puts e.message
-			end	
+			ChatClientHandler.new(client).run		
 		end
 	}
 	end
@@ -47,17 +41,17 @@ class Server
 	#	}		
 	#end
 	
-	def get_message(client)
-		message = client.gets
-		@message_queue.push message
-	end
-
-	def broadcast_message
-		message = @message_queue.pop
-		@clients.each do |client|
-			client.puts message
-		end
-	end
+#	def get_message(client)
+#		message = client.gets
+#		@message_queue.push message
+#	end
+#
+#	def broadcast_message
+#		message = @message_queue.pop
+#		@clients.each do |client|
+#			client.puts message
+#		end
+#	end
 
 end
 
