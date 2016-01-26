@@ -38,20 +38,10 @@ describe Server do
 		end
 	end
 	
-	#How should I test server#run?	
-	#context "#run" do
-	#		socket = new TCPSocket.new s.ip, s.port
-	#	it "connects to socket and transfers messages" do
-	#		t1 =    Thread.start(s.server.accept) do |client|
-        #                		client.puts "Welcome to the Terminal-Chat-App"
-        #                	end
-	#		t2 =    Thread.new {
-	#				output = socket.gets
-	#				expect(output).matches /Welcome to the Terminal-Chat-App/
-	#				socket.close
-	#			}
-	#		t1.join
-	#		t2.join
-	#	end
-	#end	
+	context "#run" do
+			socket = new TCPSocket.new s.ip, s.port	
+		it "connects to socket and transfers messages" do
+			expect{ChatClientHandler.new(socket).run}.to_not raise_error SocketError  
+		end
+	end	
 end 
