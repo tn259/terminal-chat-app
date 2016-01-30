@@ -5,17 +5,15 @@
 1. To begin with client contains a socket which just connects to server.
 2. Send messages to the server
 */
-//#include <boost/asio.hpp>
-//#include <boost/asio/ip/tcp.hpp>
 #include <string> 
 #include <queue>
 #include <memory>
 
 //Use boost smartpointers
-//typedef boost::shared_ptr<tcp::socket> socket_ptr; //perhaps use later
 typedef std::shared_ptr<std::string> string_ptr;
 //All clients have access to the same message queue later for multiple clients
 typedef std::unique_ptr< std::queue<string_ptr> > messageQueue_ptr;
+
 
 class Client {
 private:
