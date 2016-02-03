@@ -12,7 +12,6 @@ using namespace boost::asio::ip;
 namespace {
 	const std::string IP = "127.0.0.1";
 	const std::string PORT = "3000";
-	const size_t BUFFER_SIZE = 64;
 }
 
 
@@ -81,28 +80,6 @@ void Client::readNewMessage(tcp::socket& socket) {
 	}
 }
 */
-
-
-SocketHandler::SocketHandler(tcp::socket& socket, tcp::resolver::iterator& endpoint) : soc{std::move(socket)} {
-	connect(soc, endpoint);	
-}
-
-void SocketHandler::getMessages() {
-	for(;;) {
-		//read data from server via socket into buffer
-		boost::array<char, BUFFER_SIZE> buf;
-		boost::system::error_code error;
-		size_t length = soc.read_some(buffer(buf), error);
-		//read until error set as EOF or actual system error
-		if(error == boost::asio::error::eof)
-			break;
-		else if (error)
-			throw boost::system::system_error(error);
-		//signify about to write message to terminal
-		std::cout << "-->" << std::endl;
-		std::cout.write(buf.data(), length);
-	}
-}
 
 
 int main() {
