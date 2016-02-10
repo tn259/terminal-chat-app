@@ -1,6 +1,7 @@
 #include "../include/SocketHandler.hpp"
 #include <iostream>
 #include <utility>
+#include <boost/thread.hpp>
 #include "../include/Client.hpp"
 
 //namespace aliasing to enhance readability
@@ -27,9 +28,20 @@ void Client::run() {
 		tcp::socket socket{io_s};
 		
 		SocketHandler sh{socket, endpoint};
-		
-		sh.getMessages();	
-		 
+	
+		//sh.writeMessages();
+	//	boost::thread_group threads;
+		//sh.getMessages();	
+	//	threads.create_thread(boost::bind(&SocketHandler::getMessages, &sh));
+	//	threads.create_thread(boost::bind(&SocketHandler::writeMessages, &sh));
+	//	threads.join_all();
+	boost::thread writeThread{&SocketHandler::writeMessages, &sh};
+	boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+	
+	boost::thread readThread{&SocketHandler::getMessages, &sh};
+	//readThread.join();	
+	//	writeThread.join();
+	 
 	} catch (boost::system::system_error& e) {
 		std::cerr << e.what() << std::endl;
 	}	

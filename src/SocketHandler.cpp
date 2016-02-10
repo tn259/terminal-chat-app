@@ -1,5 +1,6 @@
 #include "../include/SocketHandler.hpp"
 #include <iostream>
+#include <string>
 
 using namespace boost;
 using namespace boost::asio;
@@ -11,6 +12,7 @@ namespace {
 
 SocketHandler::SocketHandler(tcp::socket& socket, tcp::resolver::iterator& endpoint) : soc{std::move(socket)} {
         connect(soc, endpoint);
+	
 }
 
 void SocketHandler::getMessages() {
@@ -29,3 +31,19 @@ void SocketHandler::getMessages() {
                 std::cout.write(buf.data(), length);
         }
 }
+
+void SocketHandler::writeMessages() {
+	for(;;) {
+		//std::cout << "### ";
+		std::string message;
+		std::getline(std::cin, message, '\n');
+		//std::cout << "|||"; 
+		//while(std::cin.peek() != '\n') std::cin >> message;
+		//boost::system::error_code error;
+		write(soc, buffer(message));
+		//if(error == boost::asio::error::eof)
+                  //      break;
+               // else if (error)
+                 //       throw boost::system::system_error(error); 
+	}
+}	

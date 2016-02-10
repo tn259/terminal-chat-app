@@ -14,6 +14,7 @@ private:
 public:
         SocketHandler(boost::asio::ip::tcp::socket&, boost::asio::ip::tcp::resolver::iterator&);
         void getMessages();
+	void writeMessages();
 };
 
 #endif
