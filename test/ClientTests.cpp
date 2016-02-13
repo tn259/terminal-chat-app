@@ -19,6 +19,8 @@ Must make sure I understand asio better
 Brush up on Multithreading and particularly as client of std::thread and boost::thread
 Learn to mock Kohlhoff's server example in gmock
 NEXT: Sending and receiving messages, need to think about design carefully before proceeding with this, e.g. SocketHandler maybe better replaced with ios handler..? etc. start with messages modelled simply as std::string. 
+
+Will need to update these tests after adding send and receive messages feature
 */
 
 using namespace boost;
