@@ -3,7 +3,8 @@
 #Server has a TCPServer which accepts TCPSockets
 # 
 #
-require_relative '../lib/chat-client-handler'
+#require_relative '../lib/chat-client-handler'
+require 'socket'
 
 class Server
 	#allow reading of ip and port as an exercise in testing for now
@@ -18,41 +19,36 @@ class Server
 		@ip.freeze
 		@port.freeze
 		@server = TCPServer.new(@ip, @port)
-		@clients = Hash.new
+	#When we utilise username and password use hash
+		#@clients = Hash.new
+	#For now use array
+		@clients = Array.new  
 	#	@message_queue = Queue.new
 	end
 #Listen for multiple clients and close connection after welcoming each one
 	def run 
-	loop {
-		print "Awaiting new client..."	
-		Thread.start(@server.accept) do |client|
-			ChatClientHandler.new(client).run		
-		end
-	}
+		loop {
+			print "Awaiting new client..."	
+			Thread.start(@server.accept) do |client|
+			#	ChatClientHandler.new(client).run
+				@clients << client
+				listen_and_broadcast(client)	
+			end
+		}.join
 	end
 	
 #Perhaps just listen_and_broadcast so no need for queue
-	#def listen_and_broadcast(client)
-	#	loop {	
-	#		message = client.gets
-	#		@clients.each do |c|
-	#			c.puts message
-	#		end
-	#	}		
-	#end
+#Because using array for clients we will be broadcasting to ourselves
+	def listen_and_broadcast(client)
+		loop {	
+			message = client.gets
+			@clients.each do |c|
+				c.puts "New message ->"
+				c.puts message
+			end
+		}		
+	end
 	
-#	def get_message(client)
-#		message = client.gets
-#		@message_queue.push message
-#	end
-#
-#	def broadcast_message
-#		message = @message_queue.pop
-#		@clients.each do |client|
-#			client.puts message
-#		end
-#	end
-
 end
 
 if __FILE__ == $0
