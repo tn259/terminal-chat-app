@@ -3,7 +3,8 @@
 #Server has a TCPServer which accepts TCPSockets
 # 
 #
-require_relative '../lib/chat-client-handler'
+#require_relative '../lib/chat-client-handler'
+require 'socket'
 
 class Server
 	#allow reading of ip and port as an exercise in testing for now
@@ -31,7 +32,6 @@ class Server
 			Thread.start(@server.accept) do |client|
 			#	ChatClientHandler.new(client).run
 				@clients << client
-				#client.puts "Thank you for joining terminal-chat-app"
 				listen_and_broadcast(client)	
 			end
 		}.join
@@ -49,18 +49,6 @@ class Server
 		}		
 	end
 	
-#	def get_message(client)
-#		message = client.gets
-#		@message_queue.push message
-#	end
-#
-#	def broadcast_message
-#		message = @message_queue.pop
-#		@clients.each do |client|
-#			client.puts message
-#		end
-#	end
-
 end
 
 if __FILE__ == $0
