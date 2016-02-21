@@ -1,5 +1,6 @@
 require_relative '../bin/server'
 require 'spec_helper'
+require_relative '../lib/chat-client-handler'
 
 describe Server do
 
@@ -39,9 +40,23 @@ describe Server do
 	end
 	
 	context "#run" do
-			socket = new TCPSocket.new s.ip, s.port	
-		it "connects to socket and transfers messages" do
-			expect{ChatClientHandler.new(socket).run}.to_not raise_error SocketError  
+			socket = new TCPSocket.new s.ip, s.port
+			so = s.server.accept
+		it "connects to socket" do
+			expect{ChatClientHandler.new(so).run}.to_not raise_error SocketError  
+		end
+
+			socket1 = TCPSocket.new s.ip, s.port
+			socket2 = TCPSocket.new s.ip, s.port
+		it "receives and sends messages" do
+			output = ""
+			t1 = Thread.new {s.run}
+			sleep 3
+			t2 = Thread.new {socket1.puts "Test\n"}
+			sleep 3 
+			t3 = Thread.new {output += socket2.gets}
+			t3.join 
+			expect(output).to match /Test/
 		end
 	end	
 end 

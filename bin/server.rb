@@ -30,7 +30,6 @@ class Server
 		loop {
 			print "Awaiting new client..."	
 			Thread.start(@server.accept) do |client|
-			#	ChatClientHandler.new(client).run
 				@clients << client
 				listen_and_broadcast(client)	
 			end
@@ -43,7 +42,7 @@ class Server
 		loop {	
 			message = client.gets
 			@clients.each do |c|
-				c.puts "New message ->"
+				#c.puts "New message ->"
 				c.puts message
 			end
 		}		

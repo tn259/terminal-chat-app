@@ -2,6 +2,7 @@ require 'socket'
 
 class ChatClientHandler
 	attr_reader :client
+	attr_reader :message
 
 	def initialize(client)
 		@client = client
@@ -9,7 +10,7 @@ class ChatClientHandler
 
 	def run
 		begin
-			@client.puts "Welcome to the Terminal-Chat-App"
+			@client.puts "test\n"
 			@client.close
 		rescue	SocketError =>  e
 			puts e.message
