@@ -44,19 +44,18 @@ protected:
 		boost::thread bt(boost::bind(&boost::asio::io_service::run, io_ptr));
 	//set up socket handler thread	
 		io_ptr2 = std::shared_ptr<io_service>{new io_service};
-		tcp::resolver resolver{*io_ptr2};
-		Client c{*io_ptr2};
+		tcp::resolver resolver{*io_ptr2};		
+                tcp::resolver::query query{IP, PORT};
+                tcp::resolver::iterator ep = resolver.resolve(query);
+		tcp::socket socket{*io_ptr2};
+		sh1 = std::unique_ptr<SocketHandler>{new SocketHandler{socket, ep}};
+		boost::thread bt2(boost::bind(&boost::asio::io_service::run, io_ptr2));
+		boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+		/*Client c{*io_ptr2};
     		c.start(resolver.resolve(tcp::resolver::query(IP, PORT)));	
 		boost::thread t(boost::bind(&boost::asio::io_service::run, io_ptr2));
     		io_ptr->run();
-		t.join();
-	
-                /*tcp::resolver::query query{IP, PORT};
-                tcp::resolver::iterator ep = resolver.resolve(query);
-		tcp::socket socket{*io_ptr2};
-		sh1 = std::unique_ptr<SocketHandler>{new SocketHandler{socket, ep}};*/
-		boost::thread bt2(boost::bind(&boost::asio::io_service::run, io_ptr2));
-		boost::this_thread::sleep(boost::posix_time::milliseconds(100));	
+		t.join();*/	
 	}
 	virtual void TearDown() {
 		io_ptr2->stop();
