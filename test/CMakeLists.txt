@@ -1,7 +1,7 @@
 enable_testing()
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
-add_executable(runTests ClientTests.cpp server.cpp)
+add_executable(runTests ClientTests.cpp server.cpp ClientStub.cpp)
 target_link_libraries(runTests SH)
 target_link_libraries(runTests ${Boost_LIBRARIES})
 target_link_libraries(runTests ${CMAKE_THREAD_LIBS_INIT})
