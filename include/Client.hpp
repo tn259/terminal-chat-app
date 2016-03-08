@@ -22,6 +22,8 @@ private:
 	boost::asio::streambuf input_buffer_;
 	boost::asio::strand strand_read;
 	boost::asio::strand strand_write;
+	messageQueue_ptr incomingMessages;
+	messageQueue_ptr outgoingMessages;
 	void stop();
 	void start_connect(tcp::resolver::iterator endpoint_iter);
 	void handle_connect(const boost::system::error_code& ec,

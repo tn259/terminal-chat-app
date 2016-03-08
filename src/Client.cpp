@@ -18,7 +18,9 @@ namespace {
 
 
 Client::Client(boost::asio::io_service& io_service)
-	: socket_{io_service}, strand_read{io_service}, strand_write{io_service} {}
+	: socket_{io_service}, strand_read{io_service}, strand_write{io_service},
+		incomingMessages{new std::queue<std::string>{}}, outgoingMessages{new std::queue<std::string>{}}
+		{}
 
 void Client::start(tcp::resolver::iterator endpoint_iter) {
     // Start the connect actor.
@@ -74,6 +76,8 @@ void Client::handle_read(const boost::system::error_code& ec) {
          	std::string line;
                 std::istream is(&input_buffer_);
                 std::getline(is, line);
+	//put into incoming message queue
+		incomingMessages->push(line);
       // Empty messages are heartbeats and so ignored.
      	        if (!line.empty())   {
                     	 std::cout << "Received: " << line << "\n"; 
@@ -89,6 +93,7 @@ void Client::start_write() {
      //Start an asynchronous operation to send the users input after pressing ENTER.
         	std::string line; 
 		std::getline(std::cin, line);
+		outgoingMessages->push(line);
 		line += "\n";
            boost::asio::async_write(socket_, boost::asio::buffer(line, BUFFER_SIZE),
            boost::bind(&Client::handle_write, this, _1));
