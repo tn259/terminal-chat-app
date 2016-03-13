@@ -3,6 +3,7 @@
 
 /*
 ClientStub now capable of reading and writing messages to server
+Modification of Client class to inject message into write functions 
 */
 #include <string> 
 #include <queue>

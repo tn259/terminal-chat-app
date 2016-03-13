@@ -80,7 +80,7 @@ void Client::handle_read(const boost::system::error_code& ec) {
 		incomingMessages->push(line);
       // Empty messages are heartbeats and so ignored.
      	        if (!line.empty())   {
-                    	 std::cout << "Received: " << line << "\n"; 
+			std::cout << line << "\n";	
                 }
                 start_read();
         }  else {

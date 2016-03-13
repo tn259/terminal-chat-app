@@ -8,7 +8,6 @@
 /*
 Check that each method does not throw system_error
 Check that the buffer does not overflow
-Implement using SocketHandler
 Start by creating a test fixture for this
 For now we will treat ClientTests.cpp as the main executable test file
 */
@@ -18,9 +17,12 @@ TODO From setting up this first test:
 Must make sure I understand asio better
 Brush up on Multithreading and particularly as client of std::thread and boost::thread
 Learn to mock Kohlhoff's server example in gmock
-NEXT: Sending and receiving messages, need to think about design carefully before proceeding with this, e.g. SocketHandler maybe better replaced with ios handler..? etc. start with messages modelled simply as std::string. 
+*/
 
-Will need to update these tests after adding send and receive messages feature
+/*
+NOTE: SendReceiveMessage Test Segfaults. Tried to test by running server on separate thread but really difficult.
+Also tried embedding ruby server but not particularly well supported.
+Should use external library to test socket connections in future.
 */
 
 using namespace boost;
