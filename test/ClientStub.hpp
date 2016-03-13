@@ -31,10 +31,14 @@ private:
 	void start_read();
 	void handle_read(const boost::system::error_code& ec);
 	void start_write();
+	void start_write(std::string&);
 	void handle_write(const boost::system::error_code& ec);		
 public:
 	ClientStub(boost::asio::io_service& io_service);
 	void start(tcp::resolver::iterator endpoint_iter);
+	void strandRead();
+	void strandWrite(std::string&);
+	std::string lastIncoming();
 };
 
 #endif

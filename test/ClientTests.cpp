@@ -42,40 +42,55 @@ protected:
 		io_ptr = std::shared_ptr<io_service>{new io_service};
     		tcp_server server(*io_ptr);
 		boost::thread st(boost::bind(&boost::asio::io_service::run, io_ptr));
+		boost::this_thread::sleep(boost::posix_time::milliseconds(100));
 	//set up socket handler thread	
-		io_ptrSH = std::shared_ptr<io_service>{new io_service};
+	/*	io_ptrSH = std::shared_ptr<io_service>{new io_service};
 		tcp::resolver resolverSH{*io_ptrSH};		
                 tcp::resolver::query query{IP, PORT};
                 tcp::resolver::iterator ep = resolverSH.resolve(query);
 		tcp::socket socket{*io_ptrSH};
 		sh1 = std::unique_ptr<SocketHandler>{new SocketHandler{socket, ep}};
 		boost::thread sht(boost::bind(&boost::asio::io_service::run, io_ptrSH));
-		boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+		boost::this_thread::sleep(boost::posix_time::milliseconds(100));*/
 	//set up client	
 		io_ptrC = std::shared_ptr<io_service>{new io_service};
 		tcp::resolver resolverC{*io_ptrC};	
 		c1 = std::shared_ptr<ClientStub>{new ClientStub{*io_ptrC}};
     		c1->start(resolverC.resolve(tcp::resolver::query(IP, PORT)));
 		boost::thread ct(boost::bind(&boost::asio::io_service::run, io_ptrC));
+		boost::this_thread::sleep(boost::posix_time::milliseconds(100));
     		//io_service.run();
 		//t.join();
 			
 	}
 	virtual void TearDown() {
-		io_ptrSH->stop();
+		//io_ptrSH->stop();
 		io_ptrC->stop();
 		io_ptr->stop();
 	}
-	std::unique_ptr<SocketHandler> sh1;
+	//std::unique_ptr<SocketHandler> sh1;
 	std::shared_ptr<ClientStub> c1;
 	std::shared_ptr<io_service> io_ptr;
-	std::shared_ptr<io_service> io_ptrSH;
+	//std::shared_ptr<io_service> io_ptrSH;
 	std::shared_ptr<io_service> io_ptrC;	
+	std::string str = "test\n";
 };
 
 //TESTS
-TEST_F(ClientTest, NoError) {
-	ASSERT_NO_THROW(sh1->getMessages());
+TEST_F(ClientTest, NoErrorRead) {
+	ASSERT_NO_THROW(c1->strandRead());
+}
+
+TEST_F(ClientTest, NoErrorWrite) {
+	ASSERT_NO_THROW(c1->strandWrite(str));
+}
+
+TEST_F(ClientTest, SendMessages) {
+	c1->strandRead();
+	boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+	c1->strandWrite(str);
+	boost::this_thread::sleep(boost::posix_time::milliseconds(100));
+	ASSERT_EQ(str, c1->lastIncoming());
 }
 
 int main(int argc, char **argv) {

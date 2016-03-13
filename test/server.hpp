@@ -8,6 +8,9 @@
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
+#include <vector>
+#include <string>
+
 std::string make_daytime_string();
 
 class tcp_connection : public boost::enable_shared_from_this<tcp_connection>
@@ -21,12 +24,14 @@ public:
   	}
 
 	boost::asio::ip::tcp::socket& socket();
+	boost::asio::streambuf& streambuf();
 	void start();
 private:
 	tcp_connection(boost::asio::io_service& io_service);
 	void handle_write(const boost::system::error_code&, size_t);
 
 	boost::asio::ip::tcp::socket socket_;
+	boost::asio::streambuf buf_;
 	std::string message_;
 };
 	
@@ -38,7 +43,10 @@ private:
   	void start_accept();
 	void handle_accept(tcp_connection::pointer new_connection,
       const boost::system::error_code& error);
+	void listen_and_broadcast(tcp_connection::pointer&);
+	void broadcast(const boost::system::error_code&, tcp_connection::pointer&);
 	boost::asio::ip::tcp::acceptor acceptor_;
+	std::vector<tcp_connection::pointer> connected_clients;	
 };
 
 #endif

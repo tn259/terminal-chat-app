@@ -59,13 +59,14 @@ void ClientStub::handle_connect(const boost::system::error_code& ec,
 		socket_.set_option(option);
 	//read and write operations in separate strands to run concurrently 
 	//use strands not threads so no need to lock the socket 
-               	strand_read.post(strand_read.wrap(boost::bind(&ClientStub::start_read, this)));
-	 	strand_write.post(strand_write.wrap(boost::bind(&ClientStub::start_write, this)));
+               	//strand_read.post(strand_read.wrap(boost::bind(&ClientStub::start_read, this)));
+	 	//strand_write.post(strand_write.wrap(boost::bind(&ClientStub::start_write, this)));
  	}
 }
 
 void ClientStub::start_read() {
     //         // Start an asynchronous operation to read a newline-delimited message.
+		std::cout << "Before client async read";
                 boost::asio::async_read_until(socket_, input_buffer_, '\n',
 	                boost::bind(&ClientStub::handle_read, this, _1));
 }
@@ -78,6 +79,7 @@ void ClientStub::handle_read(const boost::system::error_code& ec) {
                 std::getline(is, line);
 	//put into incoming message queue
 		incomingMessages->push(line);
+		std::cout << "Line read by client: " << line << "\n";
       // Empty messages are heartbeats and so ignored.
      	        if (!line.empty())   {
                     	 std::cout << "Received: " << line << "\n"; 
@@ -99,14 +101,34 @@ void ClientStub::start_write() {
            boost::bind(&ClientStub::handle_write, this, _1));
 }
 
+
+void ClientStub::start_write(std::string& injection) {
+     //Start an asynchronous operation to send the users input after pressing ENTER.
+		outgoingMessages->push(injection);
+		std::cout << "Client start writing";
+           boost::asio::async_write(socket_, boost::asio::buffer(injection, BUFFER_SIZE),
+           boost::bind(&ClientStub::handle_write, this, _1));
+}
+
 void ClientStub::handle_write(const boost::system::error_code& ec) {
 	if(!ec) {
-		start_write();
+	//	start_write();
 	} else {
 		std::cout << ec.message() << "\n";
 		stop();
 	}
 }
 
+void ClientStub::strandRead() {
+	strand_read.post(strand_read.wrap(boost::bind(&ClientStub::start_read, this)));
+}
 
-
+void ClientStub::strandWrite(std::string& injection) {
+	strand_write.post(strand_write.wrap(boost::bind(&ClientStub::start_write, this, injection)));
+}
+	
+std::string ClientStub::lastIncoming() {
+	if(!incomingMessages->empty())
+		return incomingMessages->back();
+	return "";
+}
