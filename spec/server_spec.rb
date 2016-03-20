@@ -52,11 +52,34 @@ describe Server do
 			output = ""
 			t1 = Thread.new {s.run}
 			sleep 3
-			t2 = Thread.new {socket1.puts "Test\n"}
+			t2 = Thread.new {socket1.puts "User1\n"}	
 			sleep 3 
-			t3 = Thread.new {output += socket2.gets}
-			t3.join 
-			expect(output).to match /Test/
+			t3 = Thread.new {socket2.puts "User2\n"}
+			sleep 3 
+			t4 = Thread.new {socket1.puts "Message\n"}
+			sleep 3
+			t5 = Thread.new {
+				 		socket2.gets #Bypass thank you message
+						output += socket2.gets
+					}
+			sleep 3
+			expect(output).to match /Message/
 		end
 	end	
+
+	it "saves and loads users" do
+		s.users.clear
+		user1before = User.new "Tim"
+		user2before = User.new "Jim"
+		users_before = [user1before, user2before]
+		s.users.push(user1before)
+		s.users.push(user2before)
+		s.save_users
+		s.users.clear
+		s.load_users
+		user2after = s.users.pop
+		user1after = s.users.pop
+		users_after = [user1after, user2after]
+		expect(users_before)==users_after
+	end
 end 
