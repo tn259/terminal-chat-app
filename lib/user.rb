@@ -1,9 +1,8 @@
 class User
 	attr_reader :username
 	attr_reader :password
-	def initialize(username)
+	def initialize(username, password)
 		@username = username
-		#not yet implemented passwords
-		@password = ""
+		@password = password
 	end
 end

@@ -21,6 +21,7 @@ class Server
 	attr_reader :connections
 	attr_reader :users
 	attr_reader :file
+	PWORDREGEX = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/
 	def initialize(ip, port)
 		@ip = ip
 		@port = port
@@ -42,15 +43,52 @@ class Server
 			print "Awaiting new client..."	
 			Thread.start(@server.accept) do |client|
 			begin
+				client.puts "Create new user account, y or n?"
+				choice = client.gets.chomp
+				if choice == "y"
+				then create_account(client)
+				end
+				account = nil
+				loop {
+					client.puts "Username:"
+					username = client.gets.chomp
+					username_found = false
+					@users.each do |user|
+                                        	if username == user.username
+							username_found = true
+							account = user
+                                       		end
+                                	end
+					redo if username_found == false
+					break
+				}
+				loop {
+					client.puts "Password:"
+					password = client.gets.chomp
+					unless password == account.password
+						client.puts "Password incorrect"
+					redo 
+					end	
+					break
+				}
+			#Check password is the same
+				puts "#{account.username} has joined"
+				@connections[:clients][account] = client
+				client.puts "Thanks for joining the conversation!"
+				listen_and_broadcast(account, client)
+			rescue SocketError => e
+				puts e.message
+			end	
+			end
+		}.join
+	end
+	
+	def create_account(client)
+		username = ""
+		loop {
+			client.puts "Enter your desired username:"
 				username = client.gets.chomp
 				username_taken = false
-			#Checking some users twice will refactor later
-				@connections[:clients].each do |other_name, other_client|
-					if username == other_name || client == other_client
-						client.puts "This username is taken"
-						username_taken = true
-					end
-				end
 				@users.each do |user|
 					puts user.username
                                         if username == user.username
@@ -59,31 +97,37 @@ class Server
                                         end
                                 end
 				redo if username_taken
-				puts "#{username} has joined"
-				@users.push(User.new(username))
-				@connections[:clients][username] = client
-				save_users
-				client.puts "Thanks for joining the conversation!"
-				listen_and_broadcast(username, client)
-			rescue SocketError => e
-				puts e.message
-			end	
-			end
-		}.join
+				break
+		}
+		loop {
+			client.puts "Create your password:"
+				password = client.gets.chomp
+				if PWORDREGEX.match(password) != nil
+				then 
+					@users.push(User.new(username, password))	
+					save_users
+					client.puts "Account created"
+					break
+				else
+					client.puts "Your password is invalid"
+					redo
+				end
+		}		
+
 	end
-	
+
 #Perhaps just listen_and_broadcast so no need for queue
-	def listen_and_broadcast(username, client)
+	def listen_and_broadcast(account, client)
 		loop {
 			message = client.gets
 			if message == nil
-				@clients.delete(username)
-				puts "#{username} has left the conversation"
+				@clients.delete(account)
+				puts "#{account.username} has left the conversation"
 				break
 			end
-			@connections[:clients].each do |other_name, other_client|
-				unless username == other_name
-					other_client.puts "#{username}: #{message}"
+			@connections[:clients].each do |other_account, other_client|
+				unless account.username == other_account.username
+					other_client.puts "#{account.username}: #{message}"
 				end
 			end
 		}	
