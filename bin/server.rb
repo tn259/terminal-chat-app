@@ -60,6 +60,15 @@ class Server
                                        		end
                                 	end
 					redo if username_found == false
+					already_logged_in = false
+					@connections[:clients].each do |other_account, other_client|
+						if account.username == other_account.username
+							already_logged_in = true
+							client.puts "This is already logged in"
+							break
+						end
+					end
+					redo if already_logged_in == true
 					break
 				}
 				loop {
