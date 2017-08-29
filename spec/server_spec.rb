@@ -4,7 +4,9 @@ require_relative '../lib/chat-client-handler'
 
 describe Server do
 
-	s = Server.new "127.0.0.1", 3000
+	before(:each) do
+        	let(:s)	{ Server.new "127.0.0.1", 3000 }
+        end
 
 	describe "correct initial values" do
 		it "has port == 3000" do
@@ -40,15 +42,15 @@ describe Server do
 	end
 	
 	context "#run" do
+		it "connects to socket" do
 			socket = new TCPSocket.new s.ip, s.port
 			so = s.server.accept
-		it "connects to socket" do
 			expect{ChatClientHandler.new(so).run}.to_not raise_error SocketError  
 		end
 
+		it "receives and sends messages" do
 			socket1 = TCPSocket.new s.ip, s.port
 			socket2 = TCPSocket.new s.ip, s.port
-		it "receives and sends messages" do
 			output = ""
 			t1 = Thread.new {s.run}
 			sleep 3
@@ -80,6 +82,6 @@ describe Server do
 		user2after = s.users.pop
 		user1after = s.users.pop
 		users_after = [user1after, user2after]
-		expect(users_before)==users_after
+		expect(users_before)to eq(users_after)
 	end
 end 

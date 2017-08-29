@@ -1,18 +1,17 @@
 # server.rb
 #
-#Server has a TCPServer which accepts TCPSockets
-#Has basic username functionality so each client has a name
-#Able to serialize and deserialize users
-#Next password functionality included
-#Will need to implement from client also
+# Server has a TCPServer which accepts TCPSockets
+# Has basic username functionality so each client has a name
+# Able to serialize and deserialize users
+# Next password functionality included
+# Will need to implement from client also
 #
-#require_relative '../lib/chat-client-handler'
+
 require 'socket'
-#require 'marshal'
 require_relative '../lib/user'
 
 class Server
-	#allow reading of ip and port as an exercise in testing for now
+	# allow reading of ip and port as an exercise in testing for now
 	attr_reader :ip
 	attr_reader :port
 	attr_reader :server
@@ -21,22 +20,25 @@ class Server
 	attr_reader :connections
 	attr_reader :users
 	attr_reader :file
+
 	PWORDREGEX = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/
+
 	def initialize(ip, port)
 		@ip = ip
 		@port = port
 		@ip.freeze
 		@port.freeze
 		@server = TCPServer.new(@ip, @port)
-	#When we utilise username and password use hash
+	# When we utilise username and password use hash
 		@connections = Hash.new
 		@clients = Hash.new 
 		@connections[:clients] = @clients 
-	#	@message_queue = Queue.new
 		@users = Array.new
 		@file = '../users.dat'
 	end
-#Listen for multiple clients and close connection after welcoming each one
+
+        # Listen for multiple clients and close connection after welcoming each one
+
 	def run
 		load_users
 		loop {
@@ -45,9 +47,7 @@ class Server
 			begin
 				client.puts "Create new user account, y or n?"
 				choice = client.gets.chomp
-				if choice == "y"
-				then create_account(client)
-				end
+				create_account(client) if choice == 'y'
 				account = nil
 				loop {
 					client.puts "Username:"
@@ -59,7 +59,7 @@ class Server
 							account = user
                                        		end
                                 	end
-					redo if username_found == false
+					redo unless username_found
 					already_logged_in = false
 					@connections[:clients].each do |other_account, other_client|
 						if account.username == other_account.username
@@ -68,7 +68,7 @@ class Server
 							break
 						end
 					end
-					redo if already_logged_in == true
+					redo if already_logged_in
 					break
 				}
 				loop {
@@ -76,11 +76,11 @@ class Server
 					password = client.gets.chomp
 					unless password == account.password
 						client.puts "Password incorrect"
-					redo 
+						redo 
 					end	
 					break
 				}
-			#Check password is the same
+			        # Check password is the same
 				puts "#{account.username} has joined"
 				@connections[:clients][account] = client
 				client.puts "Thanks for joining the conversation!"
@@ -96,36 +96,36 @@ class Server
 		username = ""
 		loop {
 			client.puts "Enter your desired username:"
-				username = client.gets.chomp
-				username_taken = false
-				@users.each do |user|
-					puts user.username
-                                        if username == user.username
-                                                client.puts "This username is taken"
-                                                username_taken = true
-                                        end
+			username = client.gets.chomp
+			username_taken = false
+			@users.each do |user|
+				puts user.username
+                                if username == user.username
+                                	client.puts "This username is taken"
+                                        username_taken = true
                                 end
-				redo if username_taken
-				break
+                        end
+			redo if username_taken
+			break
 		}
 		loop {
 			client.puts "Create your password:"
-				password = client.gets.chomp
-				if PWORDREGEX.match(password) != nil
-				then 
-					@users.push(User.new(username, password))	
-					save_users
-					client.puts "Account created"
-					break
-				else
-					client.puts "Your password is invalid"
-					redo
-				end
+			password = client.gets.chomp
+			unless PWORDREGEX.match(password).nil?
+			then 
+				@users.push(User.new(username, password))	
+				save_users
+				client.puts "Account created"
+				break
+			else
+				client.puts "Your password is invalid"
+				redo
+			end
 		}		
 
 	end
 
-#Perhaps just listen_and_broadcast so no need for queue
+	# Perhaps just listen_and_broadcast so no need for queue
 	def listen_and_broadcast(account, client)
 		loop {
 			message = client.gets
@@ -143,7 +143,7 @@ class Server
 		client.close	
 	end
 
-#Serialize and deserialize users will refactor later
+	# Serialize and deserialize users will refactor later
 	def save_users
 		serialized_users = Marshal.dump(@users)
 		File.open(@file, 'wb') {|f| f.write(serialized_users)}

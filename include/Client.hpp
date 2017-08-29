@@ -2,8 +2,9 @@
 #define CLIENT_H
 
 /*
-Client now capable of reading and writing messages to server
-*/
+ * Client now capable of reading and writing messages to server
+ */
+
 #include <string> 
 #include <queue>
 #include <memory>
@@ -11,7 +12,7 @@ Client now capable of reading and writing messages to server
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/array.hpp>
 
-//Maybe use boost smartpointers for message storing later
+// Maybe use boost smartpointers for message storing later
 typedef std::unique_ptr< std::queue<std::string> > messageQueue_ptr;
 
 using namespace boost::asio::ip;
@@ -26,8 +27,7 @@ private:
 	messageQueue_ptr outgoingMessages;
 	void stop();
 	void start_connect(tcp::resolver::iterator endpoint_iter);
-	void handle_connect(const boost::system::error_code& ec,
-      tcp::resolver::iterator endpoint_iter);
+	void handle_connect(const boost::system::error_code& ec, tcp::resolver::iterator endpoint_iter);
 	void start_read();
 	void handle_read(const boost::system::error_code& ec);
 	void start_write();
