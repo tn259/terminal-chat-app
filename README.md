@@ -1,1 +1,10 @@
 # terminal-chat-app
+
+# TODO TN Features
+# - Refuse login if no accounts exist and will not craete new account
+# - Password strength message
+# - Query users in the room
+# - Multicast messages or sub chat rooms to send message only to certain users
+# - Message delivery notification
+# - Send email to new user for signing up
+# - Encrypt messages
