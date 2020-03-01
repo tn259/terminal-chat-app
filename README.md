@@ -1,5 +1,4 @@
 # terminal-chat-app
-
 Noddy C++ client and Ruby Server for sending and receiving messages between terminals
 
  TODO TN Features
